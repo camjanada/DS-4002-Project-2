@@ -1,0 +1,24 @@
+                                SARIMAX Results                                 
+================================================================================
+Dep. Variable:     Weighted_ILI_Percent   No. Observations:                  208
+Model:                 SARIMAX(1, 1, 1)   Log Likelihood                 -49.001
+Date:                  Wed, 21 Oct 2026   AIC                            104.003
+Time:                          18:49:59   BIC                            114.001
+Sample:                      10-03-2021   HQIC                           108.046
+                           - 09-21-2025                                         
+Covariance Type:                    opg                                         
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ar.L1          0.3441      0.056      6.187      0.000       0.235       0.453
+ma.L1          0.4336      0.063      6.923      0.000       0.311       0.556
+sigma2         0.0937      0.005     20.315      0.000       0.085       0.103
+===================================================================================
+Ljung-Box (L1) (Q):                   0.06   Jarque-Bera (JB):               681.41
+Prob(Q):                              0.81   Prob(JB):                         0.00
+Heteroskedasticity (H):               0.85   Skew:                            -0.77
+Prob(H) (two-sided):                  0.49   Kurtosis:                        11.75
+===================================================================================
+
+Warnings:
+[1] Covariance matrix calculated using the outer product of gradients (complex-step).
