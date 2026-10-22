@@ -1,79 +1,285 @@
-# Review Complexity and Critic Polarization on Rotten Tomatoes
+# Forecasting Weekly Influenza-Like Illness Visits
 
-**DS 4002 — Project 2**
-**Team:** Shawn Chen, Arya Rajesh, Zichen Luo, Camila Janada
+**DS 4002 — Project 2**  
+**Team:** The Pink Tigers  
+**Members:** Shawn Chen, Arya Rajesh, Zichen Luo, Camila Janada  
+**Group Leader:** Zichen Luo
 
 ## Contents of This Repository
 
+This repository contains the data, code, and outputs for forecasting the national weekly percentage of outpatient visits involving influenza-like illness (ILI). Using CDC FluView data, we compare an autoregressive integrated moving average (ARIMA) model with an ARIMAX model that incorporates calendar-based holiday indicators.
+
+Our research question is: **Can historical patterns in outpatient visits involving influenza-like illness accurately predict the following week's visit percentage during the 2025–2026 season?**
+
+Our performance goal is a test mean absolute error (MAE) at least **10% lower** than a naïve baseline that predicts the next week's ILI percentage will equal the current week's observed percentage. MAE is measured in percentage points.
 
 The repository is organized into four folders:
 
-- **SCRIPTS/** holds the Google Colab notebook that runs the full analysis: feature creation, exploratory data analysis, model development and model testing.
-- **DATA/** holds the cleaned dataset and directions to acquire the original dataset
-- **OUTPUT/** holds every figure and results table produced by the notebook.
-- **REFERENCES/** holds the sources cited in the project.
+- **SCRIPTS/** contains the analysis notebook, including data cleaning, variable creation, exploratory analysis, and model development.
+- **DATA/** contains the original training and testing CSV files and their documentation.
+- **OUTPUT/** contains generated figures, model summaries, diagnostic tables, validation predictions, and selected model specifications.
+- **REFERENCES/** contains the project's references.
 
-**Main finding:** 
+**Current status:** Model development and validation are complete. Final evaluation on the 2025–2026 test season is pending.
 
 ## Section 1: Software and Platform
 
-**Software:** Python 3, run in [Google Colab](https://colab.research.google.com/) (free, browser-based).
+### Software and platform
 
-**Packages:**
+The analysis uses Python in [Google Colab](https://colab.research.google.com/), a browser-based notebook environment running on Linux.
 
-| Package | Used for | Install needed in Colab? |
+The uploaded notebook records the following execution environment:
+
+- **Python:** 3.13.16
+- **Platform:** Linux, x86_64
+
+### Packages
+
+| Package | Recorded version | Purpose |
 |---|---|---|
+| pandas | 2.2.3 | Load, clean, and organize weekly data |
+| numpy | 2.1.3 | Numerical calculations and forecast errors |
+| scipy | 1.16.3 | Distribution statistics and Q-Q plots |
+| statsmodels | 0.15.0 | ARIMA/ARIMAX fitting, stationarity tests, and diagnostics |
+| matplotlib | 3.10.0 | Figures and forecast plots |
 
+Seaborn is also used for exploratory visualizations. Its installed version must be recorded alongside the versions above before final submission.
 
-**Platform:** 
+The model-development section writes its recorded environment to `OUTPUT/model_package_versions.json`.
+
+The notebook also uses Python standard-library modules and `google.colab.files` for uploading input files. The current workflow requires Google Colab because of this upload step.
+
+If an analysis package is unavailable, install it in a code cell:
+
+```python
+%pip install pandas numpy scipy statsmodels matplotlib seaborn
+```
+
+For closer reproduction of the recorded model results, use the versions listed above. Restart the runtime if Colab requests it after installation.
 
 ## Section 2: Map of Documentation
 
-```
-DS-4002-Projects/
-├── README.md                              # This file: orientation to the repository
-├── LICENSE.md                             # MIT License
+```text
+DS-4002-Project-2/
+├── README.md
+├── LICENSE.md
 │
 ├── SCRIPTS/
-│   └── ds_4002_project_2.ipynb            # Full analysis notebook, run top to bottom:
-│                                          #   1. Upload cleaned data (Influenza_Data_25-26.csv, Influenza_Data_21-25.csv)
-│                                          #   2. Create variables
-│                                          #   3. Exploratory data analysis and plots
-│                                          #   4. Model development (regression, diagnostics)
-│                                          #   5. Model testing (held-out data vs. baseline)
+│   ├── README.md
+│   └── ds_4002_project_2.ipynb
 │
 ├── DATA/
-│   ├── README.md                          # Explanation to acquire the original dataset
-│   ├── Influenza_Data_25-26.csv           # Cleaned data for years 2025-2026
-│   └── Influenza_Data_21-25csv            # Cleaned data for years 2021-2025
+│   ├── README.md
+│   ├── Influenza_Data_21-25.csv
+│   └── Influenza_Data_25-26.csv
+│
 ├── OUTPUT/
-│   ├── 
-│   └──                                    # 
+│   ├── README.md
+│   ├── fig_a_correlation_heatmap.png
+│   ├── fig_i_1_outliers_time_series.png
+│   ├── fig_i_2_boxplot_by_month.png
+│   ├── fig_ii_1_2x2_grid.png
+│   ├── fig_ii_2_distribution_by_season_and_period.png
+│   ├── fig_iii_1_time_series.png
+│   ├── fig_iii_2_season_comparison.png
+│   ├── fig_iii_3_avg_by_mmwr_week.png
+│   ├── fig_iii_4_lag_scatter.png
+│   ├── model_package_versions.json
+│   ├── model_training_data.csv
+│   ├── model_stationarity_checks.csv
+│   ├── model_acf_pacf.png
+│   ├── model_validation_comparison.csv
+│   ├── model_validation_predictions.csv
+│   ├── model_fit_warnings.csv
+│   ├── model_arima_summary.txt
+│   ├── model_arimax_summary.txt
+│   ├── model_arima_ljung_box.csv
+│   ├── model_arimax_ljung_box.csv
+│   ├── model_arima_residual_diagnostics.png
+│   ├── model_arimax_residual_diagnostics.png
+│   ├── model_final_fit_diagnostics.csv
+│   ├── model_selected_specifications.json
+│   └── model_validation_forecasts.png
 │
 └── REFERENCES/
-    └── README.md                          # Sources cited in the project
+    └── README.md
 ```
+
+### Data files
+
+| File | Contents and role |
+|---|---|
+| `DATA/Influenza_Data_21-25.csv` | Original training data: 208 weeks, from 2021 week 40 through 2025 week 39 |
+| `DATA/Influenza_Data_25-26.csv` | Original final-test data: 53 weeks, from 2025 week 40 through 2026 week 39 |
+| `OUTPUT/model_training_data.csv` | Derived training data with reporting dates and holiday indicators, generated by Part III |
+
+The two original CSV files cover different time periods; they are not duplicate formats of the same dataset. Each contains a descriptive first line above the column names, so the notebook reads them using `skiprows=1`. No Excel input is required.
+
+See `DATA/README.md` for provenance, the data dictionary, preprocessing details, and ethical considerations.
+
+### Main model outputs
+
+| File | Description |
+|---|---|
+| `model_validation_comparison.csv` | Validation MAE and baseline improvement for all ten candidate specifications |
+| `model_validation_predictions.csv` | One-week-ahead predictions, actual values, and baseline predictions |
+| `model_stationarity_checks.csv` | ADF and KPSS results |
+| `model_fit_warnings.csv` | Warnings and failures encountered during validation fitting |
+| `model_arima_summary.txt` / `model_arimax_summary.txt` | Selected models' coefficients, uncertainty estimates, AIC, and summary diagnostics |
+| `model_arima_ljung_box.csv` / `model_arimax_ljung_box.csv` | Residual autocorrelation tests at lags 10 and 20 |
+| `model_final_fit_diagnostics.csv` | AIC, convergence status, and residual means for the selected full-training fits |
+| `model_selected_specifications.json` | Selected orders, trend settings, exogenous variables, and preferred model family |
+| `model_validation_forecasts.png` | Observed validation values compared with model and baseline forecasts |
 
 ## Section 3: Instructions for Reproducing Results
 
+### Step 1: Download the input data
 
-### Step 1: Get the data
+Download both files from this repository's `DATA/` folder:
+
+1. `Influenza_Data_21-25.csv`
+2. `Influenza_Data_25-26.csv`
+
+Preserve these exact filenames.
 
 ### Step 2: Open the notebook in Google Colab
-1. Go to [colab.research.google.com](https://colab.research.google.com/) and sign in with a Google account.
-2. 
+
+1. Open [Google Colab](https://colab.research.google.com/).
+2. Select **File → Open notebook → GitHub**.
+3. Enter this repository's URL:
+
+   `https://github.com/camjanada/DS-4002-Project-2`
+
+4. Open `SCRIPTS/ds_4002_project_2.ipynb`.
+
+Alternatively, download the notebook from `SCRIPTS/` and open it through Colab's **Upload** tab.
 
 ### Step 3: Run the notebook
-1. Click **Runtime → Run all**.
-2. The first code cell will pause and show a **Choose Files** button. Click it and select the `xxxx` you downloaded in Step 1. The notebook continues once the upload finishes; a large file can take a minute or two to upload.
-3. Let the remaining cells run in order. Do not skip cells or run them out of order, because the model testing cell reuses the model fit in the model development cell.
 
-### Step 4: Check your results
+1. Start a fresh Colab runtime so that older uploaded files and variables do not affect the run.
+2. Select **Runtime → Run all**.
+3. When the upload cell displays **Choose Files**, select both CSV files downloaded in Step 1.
+4. Let the remaining cells run in order. Model comparison takes longer because each candidate is refitted before each weekly validation forecast.
+5. Check that Part III reports:
+   - 208 total training weeks
+   - 156 initial fitting weeks
+   - 52 validation weeks
+6. Check that the candidate comparison has ten specifications and inspect the `Failed_fits` column and warning log.
+
+The notebook currently requires a manual upload; it is not an unattended execution workflow.
+
+### Step 4: Locate the generated outputs
+
+Part III automatically saves model outputs into the Colab runtime's `OUTPUT/` folder.
+
+Part II currently saves its `fig_*.png` exploratory figures in the runtime's working directory. To collect these figures with the model outputs and download them, run this optional export cell after the analysis:
+
+```python
+import shutil
+from pathlib import Path
+from google.colab import files
+
+output_folder = Path("OUTPUT")
+output_folder.mkdir(exist_ok=True)
+
+for figure in Path(".").glob("fig_*.png"):
+    shutil.copy2(figure, output_folder / figure.name)
+
+shutil.make_archive("project_outputs", "zip", output_folder)
+files.download("project_outputs.zip")
+```
+
+Extract the downloaded archive and compare the files with this repository's `OUTPUT/` folder. Download outputs before ending the Colab session because runtime files are temporary.
+
+### Step 5: Check the development results
+
+The current notebook produces approximately the following results:
 
 | Result | Expected value |
-|---|---|
+|---|---:|
+| Total development data | 208 weeks |
+| Initial fitting period | 156 weeks |
+| Development-validation period | 52 weeks |
+| Previous-week baseline validation MAE | 0.3205 |
+| Selected ARIMA order | (1, 1, 1) |
+| Selected ARIMA validation MAE | 0.2210 |
+| Selected ARIMAX order | (1, 1, 1) |
+| Selected ARIMAX validation MAE | 0.1994 |
+| ARIMA improvement over baseline | 31.0% |
+| ARIMAX improvement over baseline | 37.8% |
+| Selected ARIMA full-training AIC | 104.00 |
+| Selected ARIMAX full-training AIC | 59.33 |
+| Preferred family from validation | ARIMAX |
 
+MAE values are in percentage points. Small numerical differences may occur across package versions or computing environments.
 
-### Notes on the methods
+These are **development-validation results**, not final-test results. Whether the project meets its 10% improvement goal will be determined using the 2025–2026 test season.
 
+## Modeling Approach
 
+### Training, validation, and testing
+
+The 2021–2022 through 2024–2025 seasons form the development dataset.
+
+Within this dataset:
+
+- The first three seasons initialize model fitting.
+- The 2024–2025 season is used for expanding-window validation.
+- Before each validation week, the model is fitted using only earlier observations.
+- A one-week-ahead prediction is generated before that week's actual value is added to the fitting history.
+
+The 2025–2026 season is excluded from model fitting and order selection in Part III. However, Part II currently includes that season in descriptive plots, so it has been inspected during exploratory analysis.
+
+### Candidate specifications
+
+Five orders are compared for each model family:
+
+- (1, 0, 0)
+- (2, 0, 0)
+- (1, 1, 0)
+- (0, 1, 1)
+- (1, 1, 1)
+
+ARIMA uses the historical weighted ILI series. ARIMAX additionally includes indicators for reporting weeks containing Thanksgiving, Christmas, and New Year's Day. These indicators are based on calendar dates known before forecasting.
+
+Both families are implemented using statsmodels' SARIMAX class without seasonal terms. Models with d = 0 include a constant; models with d = 1 do not include drift.
+
+### Selection and diagnostics
+
+ADF and KPSS tests assess stationarity, and ACF/PACF plots describe serial dependence. Both undifferenced and first-differenced specifications are considered.
+
+The specification with the lowest validation MAE is selected within each family. The selected models are then refitted on all 208 training weeks. AIC is reported as supporting information; it is not the order-selection rule.
+
+Residual plots and Ljung–Box tests assess remaining model limitations. The selected fits show no statistically significant residual autocorrelation at the tested lags, but their residual distributions have heavy tails. Therefore, the results do not establish that all model assumptions are satisfied.
+
+### Final testing — pending
+
+The selected orders, trend settings, and holiday features will be fixed before final evaluation.
+
+For each week of the 2025–2026 season, the testing section will generate a forecast using only earlier observations, then add the observed value before forecasting the following week. Model test MAE will be compared with the previous-week baseline on the same dates.
+
+The performance goal is met if:
+
+**Model test MAE ≤ 0.90 × baseline test MAE**
+
+Final-test outputs will be added to the documentation map when generated.
+
+## Limitations
+
+- ILI is a symptom-based surveillance measure, not laboratory-confirmed influenza or a measure of disease severity.
+- National outpatient surveillance data may not represent every community.
+- Holiday indicators capture statistical associations rather than causal effects.
+- Development validation covers one season, and its results were used for model selection.
+- The analysis uses retrospective data extracts rather than historical data versions available at each original forecast date. Reporting delays and revisions are not modeled.
+- The models do not explicitly include annual seasonal terms.
+- Final-test performance has not yet been established.
+
+## References
+
+[1] Centers for Disease Control and Prevention, “FluView.” [Online]. Available: https://www.cdc.gov/fluview/
+
+[2] statsmodels, “statsmodels.tsa.statespace.sarimax.SARIMAX.” [Online]. Available: https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html
+
+[3] statsmodels, “statsmodels.stats.diagnostic.acorr_ljungbox.” [Online]. Available: https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_ljungbox.html
+
+Additional project references are documented in `REFERENCES/README.md`.
