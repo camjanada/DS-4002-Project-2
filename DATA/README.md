@@ -31,6 +31,24 @@ The data are public, aggregated and de-identified, so the privacy risk to indivi
 
 ## Explanatory Plots
 
+### Seasonal pattern across influenza seasons
 
-### Additional exploratory finding: 
+![Season-by-season comparison of weighted ILI](../OUTPUT/fig_iii_2_season_comparison.png)
 
+The weighted ILI percentage follows a strong recurring seasonal pattern. All five seasons rise during the fall and winter, reach their highest levels near the middle of the influenza season, and then decline through spring and summer. However, the timing and height of the peak vary substantially. For example, the 2022–2023 season peaks earlier, while the 2023–2024 season reaches a later elevated period. This variation shows why the model must use recent weekly observations instead of assuming that every season has an identical curve.
+
+### Relationship with previous weeks
+
+![Lagged relationships in weighted ILI](../OUTPUT/fig_iii_4_lag_scatter.png)
+
+Weighted ILI is strongly related to its recent history. The lag-1 correlation is 0.961 and the lag-2 correlation is 0.877, showing that adjacent weeks tend to have similar values. The lag-52 correlation is also positive at 0.711, which provides evidence of an annual seasonal pattern. These findings support the use of autoregressive forecasting models and justify comparing model forecasts with a previous-week naive baseline.
+
+### High-value weeks and seasonal peaks
+
+![Weekly weighted ILI with flagged outliers](../OUTPUT/fig_i_1_outliers_time_series.png)
+
+The IQR rule flags observations above approximately 5.6% weighted ILI as statistical outliers. These points are concentrated around winter peaks rather than scattered randomly through time. They therefore appear to represent genuine high-influenza periods, not obvious data-entry errors. The observations were retained so that the model could learn the full magnitude of seasonal outbreaks.
+
+### Additional exploratory finding
+
+The distribution of weighted ILI is right-skewed because most weeks have relatively low values and a smaller number of winter weeks have much higher values. A log transformation makes the distribution more symmetric, but the time-series and lag plots show that dependence across weeks remains the most important feature for forecasting. For that reason, the final analysis models the original weighted ILI percentage with ARIMA and ARIMAX specifications while evaluating forecasts using MAE, which is less sensitive to extreme errors than squared-error metrics.
