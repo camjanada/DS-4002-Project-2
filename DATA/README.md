@@ -9,6 +9,10 @@ This folder contains the data used in Forecasting Weekly Influenza-Like Illness 
 
 ## Data Summary
 
+The data are weekly national counts from the CDC's Outpatient Influenza-like Illness Surveillance Network (ILINet), downloaded through FluView Interactive. They cover five influenza seasons, from 2021–2022 through 2025–2026, split across two raw CSV files. Each row is one MMWR week. It records the number of reporting sentinel providers, total outpatient visits, influenza-like illness (ILI) visits overall and by age group, and the weighted and unweighted percentage of visits that were for ILI.
+
+The main variable for this project is `% Weighted ILI`, which is the national ILI percentage weighted by state population. It follows a strong seasonal cycle, peaking each winter, with peak timing and height that vary from season to season. The other columns give context, such as provider participation and patient volume, and allow breakdowns by age.
+
 ## Provenance
 This dataset comes from the Centers for Disease Control and Prevention (CDC) through the United States Outpatient Influenza-like Illness Surveillance Network (ILINet). This is created as a secondary data source because it is not directly from patients but instead based on existing records. It was created by receiving weekly counts of total patient visits as well as influenza-like illness visits, defined as fever accompanied by cough or sore throat, from participating outpatient healthcare providers. The CDC compiles these reports and calculates the national percentage of visits for influenza-like illness, weighting each state’s contribution by its population. We accessed these data through an interactive dashboard on the CDC website called FluView Interactive to select national weekly observations from 2021-2026. 
 
