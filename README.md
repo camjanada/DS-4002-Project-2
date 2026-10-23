@@ -20,7 +20,7 @@ The repository is organized into four folders:
 - **OUTPUT/** contains generated figures, model summaries, diagnostic tables, validation predictions, and selected model specifications.
 - **REFERENCES/** contains the project's references.
 
-**Current status:** Model development and validation are complete. Final evaluation on the 2025–2026 test season is pending.
+**Current status:** Model development, validation, and final evaluation on the 2025–2026 test season are complete. The selected ARIMAX(1, 1, 1) model reduced test MAE by 30.4% relative to the previous-week naïve baseline, exceeding the project's 10% improvement goal.
 
 ## Section 1: Software and Platform
 
@@ -42,8 +42,7 @@ The uploaded notebook records the following execution environment:
 | scipy | 1.16.3 | Distribution statistics and Q-Q plots |
 | statsmodels | 0.15.0 | ARIMA/ARIMAX fitting, stationarity tests, and diagnostics |
 | matplotlib | 3.10.0 | Figures and forecast plots |
-
-Seaborn is also used for exploratory visualizations. Its installed version must be recorded alongside the versions above before final submission.
+| seaborn | Not pinned | Exploratory statistical visualizations |
 
 The model-development section writes its recorded environment to `OUTPUT/model_package_versions.json`.
 
@@ -65,7 +64,6 @@ DS-4002-Project-2/
 ├── LICENSE.md
 │
 ├── SCRIPTS/
-│   ├── README.md
 │   └── ds_4002_project_2.ipynb
 │
 ├── DATA/
@@ -99,7 +97,11 @@ DS-4002-Project-2/
 │   ├── model_arimax_residual_diagnostics.png
 │   ├── model_final_fit_diagnostics.csv
 │   ├── model_selected_specifications.json
-│   └── model_validation_forecasts.png
+│   ├── model_validation_forecasts.png
+│   ├── model_test_comparison.csv
+│   ├── model_test_predictions.csv
+│   ├── model_test_fit_warnings.csv
+│   └── model_test_forecasts.png
 │
 └── REFERENCES/
     └── README.md
@@ -130,6 +132,10 @@ See `DATA/README.md` for provenance, the data dictionary, preprocessing details,
 | `model_final_fit_diagnostics.csv` | AIC, convergence status, and residual means for the selected full-training fits |
 | `model_selected_specifications.json` | Selected orders, trend settings, exogenous variables, and preferred model family |
 | `model_validation_forecasts.png` | Observed validation values compared with model and baseline forecasts |
+| `model_test_comparison.csv` | Final-test MAE, naïve baseline MAE, improvement percentage, and performance-goal result |
+| `model_test_predictions.csv` | Weekly 2025–2026 observed values, ARIMAX predictions, baseline predictions, and absolute errors |
+| `model_test_fit_warnings.csv` | Warnings recorded during final-test model fitting |
+| `model_test_forecasts.png` | Observed 2025–2026 ILI compared with ARIMAX and the previous-week baseline |
 
 ## Section 3: Instructions for Reproducing Results
 
@@ -165,12 +171,19 @@ Alternatively, download the notebook from `SCRIPTS/` and open it through Colab's
    - 156 initial fitting weeks
    - 52 validation weeks
 6. Check that the candidate comparison has ten specifications and inspect the `Failed_fits` column and warning log.
+7. Check that Part IV reports:
+   - 53 final-test weeks
+   - selected final model: ARIMAX(1, 1, 1)
+   - model test MAE of approximately 0.2131
+   - previous-week baseline test MAE of approximately 0.3063
+   - improvement over baseline of approximately 30.4%
+   - 10% performance goal achieved: `True`
 
 The notebook currently requires a manual upload; it is not an unattended execution workflow.
 
 ### Step 4: Locate the generated outputs
 
-Part III automatically saves model outputs into the Colab runtime's `OUTPUT/` folder.
+Parts III and IV automatically save model-development, validation, diagnostic, and final-test outputs into the Colab runtime's `OUTPUT/` folder.
 
 Part II currently saves its `fig_*.png` exploratory figures in the runtime's working directory. To collect these figures with the model outputs and download them, run this optional export cell after the analysis:
 
@@ -213,7 +226,21 @@ The current notebook produces approximately the following results:
 
 MAE values are in percentage points. Small numerical differences may occur across package versions or computing environments.
 
-These are **development-validation results**, not final-test results. Whether the project meets its 10% improvement goal will be determined using the 2025–2026 test season.
+These are **development-validation results** used to select the final model before evaluation on the held-out test season.
+
+### Final test results
+
+| Result | Value |
+|---|---:|
+| Final-test period | 2025 week 40 through 2026 week 39 |
+| Final-test observations | 53 weeks |
+| Selected model | ARIMAX(1, 1, 1) |
+| Model test MAE | 0.2131 |
+| Previous-week baseline test MAE | 0.3063 |
+| Improvement over baseline | 30.4% |
+| At least 10% improvement achieved | Yes |
+
+On the held-out 2025–2026 season, the selected ARIMAX(1, 1, 1) model reduced MAE by 30.4% relative to the previous-week naïve baseline. The project therefore exceeded its goal of at least a 10% improvement.
 
 ## Modeling Approach
 
@@ -252,17 +279,17 @@ The specification with the lowest validation MAE is selected within each family.
 
 Residual plots and Ljung–Box tests assess remaining model limitations. The selected fits show no statistically significant residual autocorrelation at the tested lags, but their residual distributions have heavy tails. Therefore, the results do not establish that all model assumptions are satisfied.
 
-### Final testing — pending
+### Final testing
 
-The selected orders, trend settings, and holiday features will be fixed before final evaluation.
+The model family, order, trend setting, and holiday features were fixed using development-validation results before final testing. The preferred specification was ARIMAX(1, 1, 1).
 
-For each week of the 2025–2026 season, the testing section will generate a forecast using only earlier observations, then add the observed value before forecasting the following week. Model test MAE will be compared with the previous-week baseline on the same dates.
+For each week of the held-out 2025–2026 season, the model was fitted using only observations available before that week. A one-week-ahead forecast was generated, after which the observed value was added to the expanding history. Model test MAE was compared with the previous-week baseline on the same dates.
 
 The performance goal is met if:
 
 **Model test MAE ≤ 0.90 × baseline test MAE**
 
-Final-test outputs will be added to the documentation map when generated.
+The selected ARIMAX model achieved a test MAE of 0.2131 percentage points, compared with 0.3063 for the previous-week baseline. This represents a 30.4% reduction in MAE and exceeds the project's 10% improvement goal.
 
 ## Limitations
 
@@ -272,7 +299,7 @@ Final-test outputs will be added to the documentation map when generated.
 - Development validation covers one season, and its results were used for model selection.
 - The analysis uses retrospective data extracts rather than historical data versions available at each original forecast date. Reporting delays and revisions are not modeled.
 - The models do not explicitly include annual seasonal terms.
-- Final-test performance has not yet been established.
+- Final-test evaluation covers only one influenza season, so performance may differ in future seasons.
 
 ## References
 
