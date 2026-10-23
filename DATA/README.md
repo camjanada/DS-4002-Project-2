@@ -23,12 +23,22 @@ The data are public, aggregated and de-identified, so the privacy risk to indivi
 
 ## Data Dictionary
 
-### Original variables (`rotten_tomatoes_movie_reviews.csv`)
-
-| Feature | Description | Type / Uncertainty |
-|---|---|---|
-| `id` | Unique identifier for each movie (matches `id` in `rotten_tomatoes_movies.csv`) | String/categorical identifier; not a measurement and should not 
-
+| Name | Type | Definition | Uncertainty |
+|------|------|------------|-------------|
+| `Region Type` | text | Geographic area | N/A |
+| `Region` | text | Sub-region name (HHS region, state) | N/A |
+| `Year` | integer | Year of the MMWR week | N/A |
+| `% Weighted ILI` | percentage | ILI visits as % of all visits, weighted by state population so large states count proportionally | CDC does not publish a confidence interval. The most recent weeks can be revised as late reports come in. |
+| `% Unweighted ILI` | percentage | `ILITOTAL` ÷ `TOTAL PATIENTS` × 100, no weighting | True uncertainty is larger because visits cluster within providers. |
+| `Age 0-4` | percentage | ILI visits, ages 0–4 | Age is recorded by the provider; only a small share of visits may have an unknown age. |
+| `AGE 25-49` | percentage | ILI visits, ages 25–49 | Same as `Age 0-4`. |
+| `AGE 25-64` | integer | Legacy age band used by CDC before the 2009–10 season | This band was replaced by `AGE 25-49` and `AGE 50-64`. |
+| `AGE 5-24` | integer | ILI visits, ages 5–24 | This age range can be sensitive to school calendars because visits drop during holiday breaks. |
+| `AGE 50-64` | integer | ILI visits, ages 50–64 | Same as `Age 0-4`. |
+| `AGE 65` | integer | ILI visits, ages 65 and older | Same as `Age 0-4`. |
+| `ILITOTAL` | integer | Total ILI visits, all ages | This count is dependent on how many providers reported that week. |
+| `NUM. OF PROVIDERS` | integer | Sentinel providers that reported that week | The network grew about 22% during the set time period and jumps each October when providers re-enrol, so patient mix may shift between seasons. |
+| `TOTAL PATIENTS` | integer | All outpatient visits (any reason) at reporting providers | Drops in holiday weeks (e.g. Thanksgiving), which can make % ILI look higher than it is. |
 ## Explanatory Plots
 
 ### Seasonal pattern across influenza seasons
