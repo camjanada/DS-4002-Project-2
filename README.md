@@ -72,7 +72,6 @@ DS-4002-Project-2/
 │   └── Influenza_Data_25-26.csv
 │
 ├── OUTPUT/
-│   ├── README.md
 │   ├── fig_a_correlation_heatmap.png
 │   ├── fig_i_1_outliers_time_series.png
 │   ├── fig_i_2_boxplot_by_month.png
