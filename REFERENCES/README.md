@@ -1,6 +1,6 @@
 ## References
 
-[1] Centers for Disease Control and Prevention, “2024–2025 Influenza Season Summary: Severity, Disease Burden, and Burden Prevented,” Mar. 12, 2026. [Online]. Accessed: Oct. 9, 2026.
+[1] Centers for Disease Control and Prevention, “2024–2025 Influenza Season Summary: Severity, Disease Burden, and Burden Prevented,” Mar. 12, 2026. [Online]. Accessed: Oct. 9, 2026. Available:https://gis.cdc.gov/grasp/fluview/fluportaldashboard.html?utm_
 
 [2] A. O’Halloran et al., “Influenza-Associated Hospitalizations During a High Severity Season—Influenza Hospitalization Surveillance Network, United States, 2024–25 Influenza Season,” Morbidity and Mortality Weekly Report, vol. 74, no. 34, pp. 529–537, Sept. 2025, doi: 10.15585/mmwr.mm7434a1.
 
