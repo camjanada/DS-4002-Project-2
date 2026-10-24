@@ -312,4 +312,4 @@ The selected ARIMAX model achieved a test MAE of 0.2131 percentage points, compa
 
 [3] statsmodels, “statsmodels.stats.diagnostic.acorr_ljungbox.” [Online]. Available: https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_ljungbox.html
 
-Additional project references are documented in `REFERENCES/README.md`.
+Additional project references are documented in [REFERENCES/README.md](REFERENCES/README.md).
