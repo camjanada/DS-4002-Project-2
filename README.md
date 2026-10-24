@@ -70,6 +70,9 @@ DS-4002-Project-2/
 │   ├── README.md
 │   ├── Influenza_Data_21-25.csv
 │   └── Influenza_Data_25-26.csv
+│   └── model_test_predictions.csv
+│   └── model_training_data.csv
+
 │
 ├── OUTPUT/
 │   ├── fig_a_correlation_heatmap.png
