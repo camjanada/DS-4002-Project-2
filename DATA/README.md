@@ -7,11 +7,20 @@ This folder contains the data used in Forecasting Weekly Influenza-Like Illness 
 | `Influenza_Data_21-25.csv` | The raw csv file downloaded from the CDC page including data from 2021-2022, 2022-2023, 2023-2024, and 2024-2025 files of Influenza Data consolidated when downloaded from the website. |
 | `Influenza_Data_25-26.csv` | The raw csv file downloaded from the CDC page including data from 2025-2026 of Influenza Data. |
 
+### Final analysis data
+
+The final data analyzed are generated from the raw files above by `SCRIPTS/ds_4002_project_2.ipynb` and saved in the `OUTPUT/` folder:
+
+| File | Description |
+|---|---|
+| `OUTPUT/model_training_data.csv` | Cleaned 2021–2025 training data (208 weeks) used for model development. Columns: `Date` (Sunday that begins the MMWR week), `Year`, `Week`, `Weighted_ILI_Percent`, and holiday indicators `Thanksgiving`, `Christmas`, `New_Year` (1 = the week contains that holiday, 0 = otherwise). |
+| `OUTPUT/model_test_predictions.csv` | The 2025–2026 test season (53 weeks) as analyzed: `Date`, observed weighted ILI (`Actual`), model and previous-week baseline predictions, and their absolute errors. |
+
 ## Data Summary
 
 The data are weekly national counts from the CDC's Outpatient Influenza-like Illness Surveillance Network (ILINet), downloaded through FluView Interactive. They cover five influenza seasons, from 2021–2022 through 2025–2026, split across two raw CSV files. Each row is one MMWR week. It records the number of reporting sentinel providers, total outpatient visits, influenza-like illness (ILI) visits overall and by age group, and the weighted and unweighted percentage of visits that were for ILI.
 
-The main variable for this project is `% Weighted ILI`, which is the national ILI percentage weighted by state population. It follows a strong seasonal cycle, peaking each winter, with peak timing and height that vary from season to season. The other columns give context, such as provider participation and patient volume, and allow breakdowns by age.
+The main variable for this project is `% WEIGHTED ILI`, which is the national ILI percentage weighted by state population. It follows a strong seasonal cycle, peaking each winter, with peak timing and height that vary from season to season. The other columns give context, such as provider participation and patient volume, and allow breakdowns by age.
 
 ## Provenance
 This dataset comes from the Centers for Disease Control and Prevention (CDC) through the United States Outpatient Influenza-like Illness Surveillance Network (ILINet). This is created as a secondary data source because it is not directly from patients but instead based on existing records. It was created by receiving weekly counts of total patient visits as well as influenza-like illness visits, defined as fever accompanied by cough or sore throat, from participating outpatient healthcare providers. The CDC compiles these reports and calculates the national percentage of visits for influenza-like illness, weighting each state’s contribution by its population. We accessed these data through an interactive dashboard on the CDC website called FluView Interactive to select national weekly observations from 2021-2026. 
@@ -29,17 +38,18 @@ The data are public, aggregated and de-identified, so the privacy risk to indivi
 
 | Name | Type | Definition | Uncertainty |
 |------|------|------------|-------------|
-| `Region Type` | text | Geographic area | N/A |
-| `Region` | text | Sub-region name (HHS region, state) | N/A |
-| `Year` | integer | Year of the MMWR week | N/A |
-| `% Weighted ILI` | percentage | ILI visits as % of all visits, weighted by state population so large states count proportionally | CDC does not publish a confidence interval. The most recent weeks can be revised as late reports come in. |
-| `% Unweighted ILI` | percentage | `ILITOTAL` ÷ `TOTAL PATIENTS` × 100, no weighting | True uncertainty is larger because visits cluster within providers. |
-| `Age 0-4` | percentage | ILI visits, ages 0–4 | Age is recorded by the provider; only a small share of visits may have an unknown age. |
-| `AGE 25-49` | percentage | ILI visits, ages 25–49 | Same as `Age 0-4`. |
-| `AGE 25-64` | integer | Legacy age band used by CDC before the 2009–10 season | This band was replaced by `AGE 25-49` and `AGE 50-64`. |
-| `AGE 5-24` | integer | ILI visits, ages 5–24 | This age range can be sensitive to school calendars because visits drop during holiday breaks. |
-| `AGE 50-64` | integer | ILI visits, ages 50–64 | Same as `Age 0-4`. |
-| `AGE 65` | integer | ILI visits, ages 65 and older | Same as `Age 0-4`. |
+| `REGION TYPE` | text | Geographic area; `National` for every row in this project | N/A |
+| `REGION` | text | Sub-region name (HHS region, state). For national data every value is `X`, a CDC placeholder meaning not applicable | N/A |
+| `YEAR` | integer | Year of the MMWR week | N/A |
+| `WEEK` | integer | MMWR surveillance week number (1–53); combined with `YEAR` to date each observation | N/A |
+| `% WEIGHTED ILI` | percentage | ILI visits as % of all visits, weighted by state population so large states count proportionally | CDC does not publish a confidence interval. The most recent weeks can be revised as late reports come in. |
+| `%UNWEIGHTED ILI` | percentage | `ILITOTAL` ÷ `TOTAL PATIENTS` × 100, no weighting | True uncertainty is larger because visits cluster within providers. |
+| `AGE 0-4` | integer | Number of ILI visits, ages 0–4 | Age is recorded by the provider; only a small share of visits may have an unknown age. |
+| `AGE 25-49` | integer | Number of ILI visits, ages 25–49 | Same as `AGE 0-4`. |
+| `AGE 25-64` | text | Legacy age band used by CDC before the 2009–10 season. Every value in these files is `X` (not applicable) | This band was replaced by `AGE 25-49` and `AGE 50-64`. |
+| `AGE 5-24` | integer | Number of ILI visits, ages 5–24 | This age range can be sensitive to school calendars because visits drop during holiday breaks. |
+| `AGE 50-64` | integer | Number of ILI visits, ages 50–64 | Same as `AGE 0-4`. |
+| `AGE 65` | integer | Number of ILI visits, ages 65 and older | Same as `AGE 0-4`. |
 | `ILITOTAL` | integer | Total ILI visits, all ages | This count is dependent on how many providers reported that week. |
 | `NUM. OF PROVIDERS` | integer | Sentinel providers that reported that week | The network grew about 22% during the set time period and jumps each October when providers re-enrol, so patient mix may shift between seasons. |
 | `TOTAL PATIENTS` | integer | All outpatient visits (any reason) at reporting providers | Drops in holiday weeks (e.g. Thanksgiving), which can make % ILI look higher than it is. |
