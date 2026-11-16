@@ -1,11 +1,10 @@
 # Data
 
 This folder contains the data used in Forecasting Weekly Influenza-Like Illness Visits (The Pink Tigers — DS 4002, Project 2).
-
+### Raw Data
 | File | Description |
 |---|---|
-| `Influenza_Data_21-25.csv` | The raw csv file downloaded from the CDC page including data from 2021-2022, 2022-2023, 2023-2024, and 2024-2025 files of Influenza Data consolidated when downloaded from the website. |
-| `Influenza_Data_25-26.csv` | The raw csv file downloaded from the CDC page including data from 2025-2026 of Influenza Data. |
+| `Influenza_Data_21-25.csv` | We built the dataset with a Python script that utilizes The Met Collection API. The script searches the Met’s European Paintings department for works that have images and requests each work’s record. It keeps only paintings marked as public domain and dated between 1600 and 1899, downloads each painting’s main image, and writes the information to the CSV. |
 
 ### Final analysis data
 
