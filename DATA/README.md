@@ -4,7 +4,7 @@ This folder contains the data used in Forecasting Weekly Influenza-Like Illness 
 ### Raw Data
 | File | Description |
 |---|---|
-| `Influenza_Data_21-25.csv` | We built the dataset with a Python script that utilizes The Met Collection API. The script searches the Met’s European Paintings department for works that have images and requests each work’s record. It keeps only paintings marked as public domain and dated between 1600 and 1899, downloads each painting’s main image, and writes the information to the CSV. |
+| `MET_paintings_rawdata` | We built the dataset with a Python script that utilizes The Met Collection API. The script searches the Met’s European Paintings department for works that have images and requests each work’s record. It keeps only paintings marked as public domain and dated between 1600 and 1899, downloads each painting’s main image, and writes the information to the CSV. |
 
 ### Final analysis data
 
