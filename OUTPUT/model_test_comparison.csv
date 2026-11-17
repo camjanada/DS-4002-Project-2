@@ -1,0 +1,2 @@
+Model,Test_MAE,Naive_Test_MAE,Improvement_Percent,Goal_At_Least_10_Percent,Test_Weeks
+"ARIMAX(1, 1, 1)",0.2130821429697178,0.30629233962264146,30.43177533194613,True,53

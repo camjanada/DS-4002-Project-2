@@ -1,0 +1,29 @@
+{
+  "ARIMA": {
+    "order": [
+      1,
+      1,
+      1
+    ],
+    "trend": "n",
+    "holiday_columns": [],
+    "validation_MAE": 0.2209871752535955,
+    "final_fit_warnings": []
+  },
+  "ARIMAX": {
+    "order": [
+      1,
+      1,
+      1
+    ],
+    "trend": "n",
+    "holiday_columns": [
+      "Thanksgiving",
+      "Christmas",
+      "New_Year"
+    ],
+    "validation_MAE": 0.19935209689704986,
+    "final_fit_warnings": []
+  },
+  "preferred_family": "ARIMAX"
+}
