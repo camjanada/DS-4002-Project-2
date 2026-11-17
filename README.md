@@ -28,7 +28,14 @@ The repository follows the course’s adaptation of TIER Protocol 4.0 [3].
 
 ### Software and platform
 
-Both notebooks use **Python 3** in [Google Colab](https://colab.research.google.com/), a browser-based notebook environment with a Linux runtime. The analysis can run on a CPU and automatically uses a CUDA GPU when available. An internet connection is needed to collect data from the Met API and to download the pretrained ResNet-18 weights on first use.
+The analysis uses Python in Google Colab, a browser-based notebook environment running on Linux.
+
+The uploaded notebook records the following execution environment:
+
+Python: 3.13.16
+Platform: Linux, x86_64
+
+An internet connection is needed to collect data from the Met API and to download the pretrained ResNet-18 weights on first use.
 
 ### Packages
 
