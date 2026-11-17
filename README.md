@@ -161,4 +161,4 @@ Within each cross-validation fold, `SelectKBest` ranks the ResNet-18 features us
 
 [3] Project TIER, “TIER Protocol 4.0.” [Online]. Available: https://www.projecttier.org/tier-protocol/protocol-4-0/
 
-Additional references can be found in REFERENCES.md
+Additional references can be found in `REFERENCES/README.md`
