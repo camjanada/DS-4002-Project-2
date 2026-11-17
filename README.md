@@ -69,7 +69,7 @@ Project 3 repository/
 
 ### Data files
 
-The collection notebook exports `met_sample_balanced.zip`. See `DATA/README.md` for where to obtain the archive and for the dataset provenance, data dictionary, and ethical considerations.
+Note: The collection notebook exports `met_sample_balanced.zip`. See `DATA/README.md` for where to obtain the archive and for the dataset provenance, data dictionary, and ethical considerations.
 
 | File or folder | Contents and role |
 |---|---|
