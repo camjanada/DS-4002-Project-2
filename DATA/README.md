@@ -1,4 +1,4 @@
-# Data
+# Data (change all)
 
 This folder contains the data used in Forecasting Weekly Influenza-Like Illness Visits (The Pink Tigers — DS 4002, Project 2).
 
