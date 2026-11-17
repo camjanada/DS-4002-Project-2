@@ -11,7 +11,7 @@ This repository contains the data, code, and outputs for classifying European pa
 
 **Research question:** Can visual features of European paintings predict whether they were made in the 17th, 18th, or 19th century better than guessing the most common century?
 
-**Performance goal:** Achieve test accuracy at least **10 percentage points higher** than a baseline that predicts the most common century in the training set for every test painting.
+**Performance goal:** Achieve test accuracy at least 10 percentage points higher than a baseline that predicts the most common century in the training set for every test painting.
 
 The repository follows the course’s adaptation of TIER Protocol 4.0 [3].
 
